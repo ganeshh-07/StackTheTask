@@ -6,7 +6,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth';
+  private apiUrl = 'https://stackthetask.onrender.com/api/auth';
   private tokenKey = 'auth_token';
 
   constructor(private http: HttpClient) {}
