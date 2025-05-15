@@ -7,7 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
-app.use(cors({origin: 'http://localhost:4200'}));
+app.use(cors({origin: 'https://stack-the-task.vercel.app'}));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
