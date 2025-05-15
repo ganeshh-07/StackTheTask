@@ -8,6 +8,7 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private apiUrl = 'https://stackthetask.onrender.com/api/auth';
   private tokenKey = 'auth_token';
+  private usernameKey = 'username';
 
   constructor(private http: HttpClient) {}
 
@@ -17,11 +18,15 @@ export class AuthService {
 
   login(username: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { username, password })
-      .pipe(tap(response => localStorage.setItem(this.tokenKey, response.token)));
+      .pipe(tap(response => {
+        localStorage.setItem(this.tokenKey, response.token);
+        localStorage.setItem(this.usernameKey, username);
+      }));
   }
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.usernameKey);
   }
 
   getToken(): string | null {
@@ -30,5 +35,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  getUsername(): string | null {
+    return localStorage.getItem(this.usernameKey);
   }
 }

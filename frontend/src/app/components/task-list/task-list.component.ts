@@ -35,6 +35,7 @@ import { Subject, debounceTime } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-toolbar class="toolbar" [@fadeIn]>
+      <span class="welcome-message" *ngIf="username">Welcome, {{ username }}</span>
       <span class="toolbar-title">StackTask</span>
       <button mat-icon-button (click)="logout()" class="logout-button">
         <mat-icon>logout</mat-icon>
@@ -95,7 +96,7 @@ import { Subject, debounceTime } from 'rxjs';
     }
     .toolbar {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       background: linear-gradient(90deg, #7b68ee, #ff6b6b, #4ecdc4);
       color: white;
@@ -104,6 +105,20 @@ import { Subject, debounceTime } from 'rxjs';
       position: sticky;
       top: 0;
       z-index: 2;
+    }
+    .welcome-message {
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      background: linear-gradient(90deg, #ff6b6b, #7b68ee);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease;
+    }
+    .welcome-message:hover {
+      transform: scale(1.05);
     }
     .toolbar-title {
       font-family: 'Roboto', sans-serif;
@@ -116,6 +131,10 @@ import { Subject, debounceTime } from 'rxjs';
     .logout-button {
       font-family: 'Roboto', sans-serif;
       color: white;
+      background: linear-gradient(90deg, #ff6b6b, #7b68ee);
+      padding: 0.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: transform 0.2s ease;
     }
     .logout-button:hover {
@@ -292,6 +311,7 @@ import { Subject, debounceTime } from 'rxjs';
 export class TaskListComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   filterStatus: string = '';
+  username: string | null = null;
   private filterSubject = new Subject<string>();
 
   constructor(
@@ -307,6 +327,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.username = this.authService.getUsername() || 'User';
     this.loadTasks();
   }
 
@@ -323,7 +344,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.taskService.getTasks(status).subscribe({
       next: (tasks) => {
         this.tasks = tasks;
-        this.cdr.markForCheck(); // Trigger change detection
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.snackBar.open(err.error.message, 'Dismiss', {
