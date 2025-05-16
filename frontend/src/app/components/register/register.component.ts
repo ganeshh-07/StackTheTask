@@ -58,14 +58,13 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
         <span class="keyword">Track</span>
       </div>
       <mat-card class="register-card" [@cardBounce]>
-       <mat-card-header>
+        <mat-card-header>
           <mat-card-title class="title">
             <mat-icon class="title-icon">check_circle</mat-icon>
             StackTask
           </mat-card-title>
-          <mat-card-subtitle class="subtitle">Sign in to organize your tasks</mat-card-subtitle>
+          <mat-card-subtitle class="subtitle">Create an account to organize your tasks</mat-card-subtitle>
         </mat-card-header>
-        
         <mat-card-content>
           <form #registerForm="ngForm" (ngSubmit)="onSubmit()" [@bounceIn]>
             <mat-form-field appearance="fill" class="form-field" floatLabel="always">
@@ -92,9 +91,9 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
                 <span *ngIf="!loading">Register</span>
                 <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
               </button>
-              <button mat-raised-button routerLink="/login" class="login-button">
-                Login
-              </button>
+            </div>
+            <div class="nav-link-container">
+              <a routerLink="/login" class="nav-link">Already registered? Login</a>
             </div>
           </form>
         </mat-card-content>
@@ -215,11 +214,13 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
       padding: 0;
       margin-bottom: 1.5rem;
     }
     .title {
       display: flex;
+      justify-content: center;
       align-items: center;
       font-family: 'Roboto', sans-serif;
       font-size: 2rem;
@@ -232,7 +233,7 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
     .title-icon {
       font-size: 2rem;
       color: #7b68ee;
-      margin-right: 0.5rem;
+      margin: 0 0.5rem;
     }
     .subtitle {
       font-family: 'Roboto', sans-serif;
@@ -295,18 +296,24 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
       background: #d3d3d3;
       cursor: not-allowed;
     }
-    .login-button {
-      font-family: 'Roboto', sans-serif;
-      font-weight: 500;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: background 0.3s ease, transform 0.2s ease;
+    .nav-link-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
     }
-    .login-button:hover {
-      background: rgba(255, 255, 255, 0.4);
+    .nav-link {
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #2c3e50;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease, text-decoration 0.2s ease;
+    }
+    .nav-link:hover {
+      color: #7b68ee;
+      text-decoration: underline;
+      text-decoration-color: #7b68ee;
       transform: scale(1.05);
     }
     mat-spinner {
@@ -351,6 +358,12 @@ export class RegisterComponent {
     this.authService.register(this.username, this.password).subscribe({
       next: () => {
         this.loading = false;
+        this.snackBar.open('Registration successful!', 'Dismiss', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
         this.router.navigate(['/login']);
       },
       error: (err) => {

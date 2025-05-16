@@ -91,9 +91,9 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
                 <span *ngIf="!loading">Sign In</span>
                 <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
               </button>
-              <button mat-raised-button routerLink="/register" class="register-button">
-                Register
-              </button>
+            </div>
+            <div class="nav-link-container">
+              <a routerLink="/register" class="nav-link">New user? Register</a>
             </div>
           </form>
         </mat-card-content>
@@ -294,18 +294,24 @@ import { animate, style, transition, trigger, keyframes } from '@angular/animati
       background: #d3d3d3;
       cursor: not-allowed;
     }
-    .register-button {
-      font-family: 'Roboto', sans-serif;
-      font-weight: 500;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: background 0.3s ease, transform 0.2s ease;
+    .nav-link-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
     }
-    .register-button:hover {
-      background: rgba(255, 255, 255, 0.4);
+    .nav-link {
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #2c3e50;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease, text-decoration 0.2s ease;
+    }
+    .nav-link:hover {
+      color: #7b68ee;
+      text-decoration: underline;
+      text-decoration-color: #7b68ee;
       transform: scale(1.05);
     }
     mat-spinner {
@@ -350,6 +356,12 @@ export class LoginComponent {
     this.authService.login(this.username, this.password).subscribe({
       next: () => {
         this.loading = false;
+        this.snackBar.open('Login successful!', 'Dismiss', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
         this.router.navigate(['/tasks']);
       },
       error: (err) => {
